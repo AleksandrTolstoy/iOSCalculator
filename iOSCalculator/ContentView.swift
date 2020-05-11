@@ -8,14 +8,59 @@
 
 import SwiftUI
 
+enum CalculatorButton: String {
+    case ac, reverseSign, percent, factorise
+    case equals, plus, minus, multiply, divide
+    case zero, one, two, three, four, five, six, seven, eight, nine, dot
+
+    var title: String {
+        switch self {
+        case .reverseSign: return "±"
+        case .percent: return "%"
+        case .factorise: return "F"
+            
+        case .equals: return "="
+        case .plus: return "+"
+        case .minus: return "-"
+        case .multiply: return "×"
+        case .divide: return "÷"
+        
+        case .dot: return "."
+        case .zero: return "0"
+        case .one: return "1"
+        case .two: return "2"
+        case .three: return "3"
+        case .four: return "4"
+        case .five: return "5"
+        case .six: return "6"
+        case .seven: return "7"
+        case .eight: return "8"
+        case .nine: return "9"
+        default: return "AC"
+        }
+    }
+
+    
+    var background: Color {
+        switch self {
+        case .ac, .reverseSign, .percent, .factorise:
+            return Color(.lightGray)
+        case .equals, .plus, .minus, .multiply, .divide:
+            return Color(.orange)
+        default:
+            return Color(.darkGray)
+        }
+    }
+}
+
 struct ContentView: View {
     
-    let buttons = [
-        ["AC", "±", "%", "÷"],
-        ["7", "8", "9", "×"],
-        ["4", "5", "6", "-"],
-        ["1", "2", "3", "+"],
-        ["0", ".", "F", "="]
+    let buttons: [[CalculatorButton]] = [
+        [.ac, .reverseSign, .percent, .divide],
+        [.seven, .eight, .nine, .multiply],
+        [.four, .five, .six, .minus],
+        [.one, .two, .three, .plus],
+        [.zero, .dot, .factorise, .equals]
     ]
     
     var body: some View {
@@ -33,12 +78,16 @@ struct ContentView: View {
                 ForEach(buttons, id: \.self) { row in
                     HStack (spacing: 12) {
                         ForEach(row, id: \.self) {button in
-                            Text(button)
-                            .font(.system(size: 32))
-                                .frame(width: self.buttonWidth(), height: self.buttonWidth())
-                            .foregroundColor(.white)
-                            .background(Color.orange)
-                                .cornerRadius(self.buttonWidth())
+                            Button(action: {
+                                
+                            }) {
+                                Text(button.title)
+                                .font(.system(size: 32))
+                                    .frame(width: self.buttonWidth(), height: self.buttonWidth())
+                                .foregroundColor(.white)
+                                    .background(button.background)
+                                    .cornerRadius(self.buttonWidth())
+                            }
                         }
                     }
                 }
