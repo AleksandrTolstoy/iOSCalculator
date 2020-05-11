@@ -8,6 +8,10 @@
 
 import SwiftUI
 
+extension LosslessStringConvertible {
+    var string: String { .init(self) }
+}
+
 enum CalculatorButton: String {
     case ac, reverseSign, percent, factorise
     case equals, plus, minus, multiply, divide
@@ -55,10 +59,71 @@ enum CalculatorButton: String {
 // Global Application State
 class GlobalEnvironment: ObservableObject {
     
-    @Published var display = "0"
+    @Published var display = ""
+    var leftNumber: String = ""
+    var operation: String = ""
+    var rightNumber: String = ""
+
+    let operations: [String] = ["×", "÷", "+", "-", "%"]
+    let digits: [String] = ["0","1","2","3","4","5","6","7","8","9"]
+    
+    func clearHistory() {
+        self.operation = ""
+        self.rightNumber = ""
+    }
     
     func receiveInput(calculatorButton: CalculatorButton) {
-        self.display = calculatorButton.title
+        
+        let input = calculatorButton.title
+        self.display += input
+        
+        if self.operation != "" {
+            self.rightNumber += input
+        } else {
+            self.leftNumber += input
+        }
+        
+        if operations.contains(input) {
+            self.operation = input
+        }
+        
+        if input == "=" {
+            let leftNumber = (self.leftNumber as NSString).doubleValue
+            let rightNumber = (self.rightNumber as NSString).doubleValue
+                
+            if operation == "×" {
+                self.leftNumber = (leftNumber * rightNumber).string
+            }
+            else if operation == "÷" {
+                self.leftNumber = (leftNumber / rightNumber).string
+            }
+            else if operation == "+" {
+                self.leftNumber = (leftNumber + rightNumber).string
+            }
+            else if operation == "-" {
+                self.leftNumber = (leftNumber - rightNumber).string
+            }
+            else if operation == "%" {
+                self.leftNumber = (leftNumber * (rightNumber / 100)).string
+            }
+
+            self.clearHistory()
+            self.display = self.leftNumber
+        }
+
+        else if input == "AC" {
+            self.clearHistory()
+            self.leftNumber = ""
+            self.display = ""
+        }
+
+        else if input == "±" {
+            let number = (self.leftNumber as NSString).doubleValue
+            self.leftNumber = (number != 0 ? -number : 0).string
+
+            self.clearHistory()
+            self.display = self.leftNumber
+        }
     }
 }
 
@@ -107,9 +172,7 @@ struct CalculatorButtonView: View {
     
     var body: some View {
         Button(action: {
-            
             self.env.receiveInput(calculatorButton: self.button)
-            
         }) {
             Text(button.title)
             .font(.system(size: 32))
