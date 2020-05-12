@@ -68,7 +68,7 @@ func factorise(n: Double) -> (a: Double, b: Double) {
         s += 1
         y = pow(s, 2) - n
     }
-    return (s + Double(y.squareRoot()), s - Double(y.squareRoot()))
+    return (s + y.squareRoot(), s - y.squareRoot())
 }
 
 
@@ -92,7 +92,7 @@ class GlobalEnvironment: ObservableObject {
     var rightNumber: String = ""
 
     let operations: [String] = ["×", "÷", "+", "-", "%"]
-    let digits: [String] = ["0","1","2","3","4","5","6","7","8","9"]
+    let digits: [String] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     
     func clearHistory() {
         self.operation = ""
@@ -209,10 +209,10 @@ struct CalculatorButtonView: View {
         }) {
             Text(button.title)
             .font(.system(size: 32))
-                .frame(width: self.buttonWidth(), height: self.buttonWidth())
+            .frame(width: self.buttonWidth(), height: self.buttonWidth())
             .foregroundColor(.white)
-                .background(button.background)
-                .cornerRadius(self.buttonWidth())
+            .background(button.background)
+            .cornerRadius(self.buttonWidth())
         }
     }
     
