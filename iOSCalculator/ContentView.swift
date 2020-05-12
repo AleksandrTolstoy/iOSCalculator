@@ -12,6 +12,7 @@ extension LosslessStringConvertible {
     var string: String { .init(self) }
 }
 
+
 enum CalculatorButton: String {
     case ac, reverseSign, percent, factorise
     case equals, plus, minus, multiply, divide
@@ -56,6 +57,32 @@ enum CalculatorButton: String {
     }
 }
 
+
+var expansion: [String] = []
+
+// Fermat Factorization
+func factorise(n: Double) -> (a: Double, b: Double) {
+    var s = ceil(n.squareRoot())
+    var y = pow(s, 2) - n
+    while !(floor(y.squareRoot()) == y.squareRoot()) {
+        s += 1
+        y = pow(s, 2) - n
+    }
+    return (s + Double(y.squareRoot()), s - Double(y.squareRoot()))
+}
+
+
+func full_factor(n: Double) {
+    let (a, b) = factorise(n: n)
+    if b != 1 {
+        full_factor(n: a)
+        full_factor(n: b)
+    } else {
+        expansion.append(a.string)
+    }
+}
+
+
 // Global Application State
 class GlobalEnvironment: ObservableObject {
     
@@ -75,6 +102,8 @@ class GlobalEnvironment: ObservableObject {
     func receiveInput(calculatorButton: CalculatorButton) {
         
         let input = calculatorButton.title
+        let leftNumber = (self.leftNumber as NSString).doubleValue
+
         self.display += input
         
         if self.operation != "" {
@@ -88,7 +117,6 @@ class GlobalEnvironment: ObservableObject {
         }
         
         if input == "=" {
-            let leftNumber = (self.leftNumber as NSString).doubleValue
             let rightNumber = (self.rightNumber as NSString).doubleValue
                 
             if operation == "×" {
@@ -110,19 +138,23 @@ class GlobalEnvironment: ObservableObject {
             self.clearHistory()
             self.display = self.leftNumber
         }
-
         else if input == "AC" {
             self.clearHistory()
             self.leftNumber = ""
             self.display = ""
         }
-
         else if input == "±" {
-            let number = (self.leftNumber as NSString).doubleValue
-            self.leftNumber = (number != 0 ? -number : 0).string
-
-            self.clearHistory()
+            self.leftNumber = (leftNumber != 0 ? -leftNumber : 0).string
             self.display = self.leftNumber
+        }
+        else if input == "F" {
+            if Int(leftNumber) % 2 != 0 {
+                full_factor(n: leftNumber)
+                self.display = expansion.joined(separator: "×")
+                expansion.removeAll()
+            } else {
+                self.display = "Not allowed for even numbers"
+            }
         }
     }
 }
@@ -163,6 +195,7 @@ struct ContentView: View {
         }
     }
 }
+
 
 struct CalculatorButtonView: View {
     
