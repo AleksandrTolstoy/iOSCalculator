@@ -5,9 +5,12 @@ Calculator with additional option *Fermat factorisation
 https://en.wikipedia.org/wiki/Fermat%27s_factorization_method
 
 # How to run?
-1)So, you need Xcode11 for run, it is all  
+You need Xcode11 for run   
+1)Clone this repository into the projects folder  
+2)Open and run in Xcode11  
+As an output, you will have a same calculator that is installed on iPhone  
+Enter an odd number and press F if you want to doing factorisation     
 
 # Sample of execution 
-As an output, you will have a calculator that is installed on iPhone  
-Factorisation result of 777  
+This is factorisation result of 777  
 ![alt-text](https://github.com/AleksandrTolstoy/iOSCalculator/blob/master/sample.png)
