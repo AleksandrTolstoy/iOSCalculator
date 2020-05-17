@@ -2,7 +2,7 @@
 Calculator with additional option *Fermat factorisation
 
 # Source
-https://en.wikipedia.org/wiki/Fermat%27s_factorization_method
+[Fermat's factorization method](https://en.wikipedia.org/wiki/Fermat%27s_factorization_method "Wikipedia")
 
 # How to run?
 You need have Xcode11 for run   
